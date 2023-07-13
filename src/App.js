@@ -1,71 +1,60 @@
 import { useFormik } from 'formik';
 import './App.css';
+import { userSchema } from './schema';
+
+const onSubmit = () => {
+  console.log("submitted")
+}
 
 function App() {
-  const formik = useFormik({
+  const {values,errors,touched,handleBlur,handleChange,handleSubmit}= useFormik({
     initialValues:{
       name: "",
       email: "",
       password: "",
       confirmpassword:""
     },
-    onSubmit:(values) => {
-      console.log(formik.values)
-    },
-    
-    validate: (values) => {
-      let errors = {}
-      if (!values.name) {
-        errors.name = "Name is Required"
-      }
-      if (!values.email) {
-        errors.email = "Email is Required"
-      }
-      if (!values.password) {
-        errors.password = "Password is Required"
-      }
-      if (!values.confirmpassword) {
-        errors.confirmpassword = "Password is Required"
-      }
-      return errors
-    }
+    validationSchema:userSchema,onSubmit,
   })
-  //console.log(formik.values)
+  console.log(errors)
   return (
     <div className='App'>
-      <form onSubmit={formik.handleSubmit}>
+      <h1>Register Form</h1>
+      <form onSubmit={handleSubmit}>
+        <div className='inputs-container'>
       <label htmlFor='name'>Name</label>
       <br/>
       <input type="text" id='name' name='name'
-        value={formik.values.name} className=""
-        onChange={formik.handleChange}
+        value={values.name} className={errors.name?"input-error":""}
+        onChange={handleChange} onBlur={handleBlur}
         />
-        {formik.errors.name ? <div className='error'>{ formik.errors.name}</div>:null}
+        {errors.name && touched.name && <p className='error' >{errors.name}</p>} 
       <br/>
       <label htmlFor='email'>Email</label>
       <br/>
       <input type="email" id='email' name='email'
-        value={formik.values.email} className=""
-        onChange={formik.handleChange}
+        value={values.email} className={errors.email?"input-error":""}
+        onChange={handleChange} onBlur={handleBlur}
         />
-        {formik.errors.email ?<div className='error'>{ formik.errors.email}</div>:null}
+        {errors.email && touched.email && <p className='error' >{errors.email}</p>} 
       <br/>
       <label htmlFor='password'>Password</label>
       <br/>
       <input type="password" id='password' name='password'
-        value={formik.values.password} className=""
-      onChange={formik.handleChange}
+        value={values.password} className={errors.password && touched.errors?"input-error":""}
+      onChange={handleChange} onBlur={handleBlur}
         />
-        {formik.errors.password ? <div className='error'>{ formik.errors.password}</div>: null}
+       {errors.password && touched.password && <p className='error' >{errors.password}</p>} 
         <br />
         <label htmlFor='confirmpassword'>Confirm Password</label>
       <br/>
       <input type="password" id='confirmpassword' name='confirmpassword'
-        value={formik.values.confirmpassword} className=""
-      onChange={formik.handleChange}
+        value={values.confirmpassword} className={errors.confirmpassword?"input-error":""}
+      onChange={handleChange} onBlur={handleBlur}
         />
-        {formik.errors.password ? <div className='error'>{ formik.errors.password}</div>: null}
-      <br/>
+        {errors.confirmpassword && touched.confirmpassword && <p className='error' >{errors.confirmpassword}</p>} 
+          <br />
+        </div>
         <button className='' type='submit'>Submit</button>
       </form>
     </div>
